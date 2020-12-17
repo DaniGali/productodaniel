@@ -4,68 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jesuitasrioja.HolaMundo.modelo.Producto;
+import org.jesuitasrioja.HolaMundo.repository.IProductosRepository;
+import org.jesuitasrioja.HolaMundo.repository.ProductosRepository;
+import org.jesuitasrioja.HolaMundo.repository.ProductosRepositoryMongoDB;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProductoController {
-	
+
+	private IProductosRepository pr = new ProductosRepositoryMongoDB();
+
 	@GetMapping("/productos")
-	public List<Producto> allProducts(){
-		List<Producto> listaProducto= new ArrayList<>();
-		listaProducto.add(new Producto("1", "patata", 1.50));
-		listaProducto.add(new Producto("2", "tomate", 2.50));
-		listaProducto.add(new Producto("3", "lechuga", 3.50));
+	public List<Producto> allProducts() {
 		
-		return listaProducto;
+		return pr.getAll();
 	}
-	
+
 	@GetMapping("/producto/{id}")
 	public Producto getProducto(@PathVariable String id) {
-		
-		return new Producto("1", "patata", 1.50);
+
+		return pr.getById(id);
 	}
-	
+
 	@GetMapping("/producto")
-	public Producto getProducto2(@RequestParam(value="id") String id) {
-		return new Producto("1", "patata", 1.50);
+	public Producto getProducto2(@RequestParam(value = "id") String id) {
+		return pr.getById(id);
 	}
-	
+
 	@PostMapping("/producto")
-	public Producto postProducto(@RequestBody Producto nuevo) {
-		
-		return null;
+	public String postProducto(@RequestBody Producto nuevo) {
+
+		return String.valueOf(pr.aniadirProducto(nuevo));
 	}
-	
+
 	@PutMapping("/producto/{id}")
-	public Producto putProducto(@RequestBody Producto editado, @PathVariable String id) {
-		
+	public String putProducto(@RequestBody Producto editado, @PathVariable String id) {
+
 		return null;
 	}
-	
+
 	@DeleteMapping("/producto")
-	public Producto deleteProducto() {
-		 return null;
+	public String deleteProducto(String id) {
+		return String.valueOf(pr.eliminarProducto(id));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 //	@GetMapping("/saludos/{nombre}")
 //	public String getSaludo(@PathVariable String nombre) {
 //		return "Hola "+nombre;
